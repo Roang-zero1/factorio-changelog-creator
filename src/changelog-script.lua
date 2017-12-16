@@ -175,17 +175,20 @@ if arg and arg[0] then
 	local input = require(arg[1] or 'changelog')
 	local out_dir = arg[2] or dirname(arg[0])
 	
+	if not out_dir:gmatch('[/\\]$')() then out_dir = out_dir.."/"; end
+	os.execute("mkdir "..out_dir) -- Fuck you Lua, why can't there be any directory creation function???
+	
 	local file
 	
-	file = io.open(out_dir..'changelog.txt', 'w')
+	file = assert(io.open(out_dir..'changelog.txt', 'w'))
 	file:write(_M.factorio(input))
 	file:close()
 	
-	file = io.open(out_dir..'changelog.md', 'w')
+	file = assert(io.open(out_dir..'changelog.md', 'w'))
 	file:write(_M.md(input))
 	file:close()
 	
-	file = io.open(out_dir..'changelog_forum.txt', 'w')
+	file = assert(io.open(out_dir..'changelog_forum.txt', 'w'))
 	file:write(_M.forum(input))
 	file:close()
 	
