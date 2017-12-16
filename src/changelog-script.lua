@@ -170,11 +170,11 @@ end
 
 -- Run when launched from the command line
 if arg and arg[0] then
-	local input = require(arg[1] or 'changelog')
+	local input = dofile(arg[1] or 'changelog.lua')
 	local out_dir = arg[2] or dirname(arg[0])
 	
-	if not out_dir:gmatch('[/\\]$')() then out_dir = out_dir.."/"; end
 	os.execute("mkdir "..out_dir) -- Fuck you Lua, why can't there be any directory creation function???
+	if not out_dir:gmatch('[/\\]$')() then out_dir = out_dir.."/"; end
 	
 	local file
 	
