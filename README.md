@@ -2,8 +2,10 @@
 This is a quick and dirty lua script for generating changelog for Factorio mods in various formats.
 
 # Usage #
-Run the script from the command line. If no parameters are given, it will look for a file named `changelog.lua` in the
-directory it was called from and it will output into the same directory.  
+Get the script file and put it somewhere on your computer.
+
+Run the script from the command line using lua (e.g.`lua changelog-script.lua`). If no parameters are given, it will
+look for a file named `changelog.lua` in the directory it was called from and it will output into the same directory.  
 The possible parameters are:
 - `changelog-path`: This is the path to read the changelog from. It has to be a Lua file in the format outlined bellow.
 - `out-path`: This is a path to a directory that the outputs will be stored in. If it doesn't exist, it will be created.
