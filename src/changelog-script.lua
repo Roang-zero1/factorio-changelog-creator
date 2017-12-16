@@ -160,8 +160,6 @@ function _M.format(log, format)
 		formats[format or 'md'](out, normalize(version))
 	end
 	
-	print(res)
-	
 	return res
 end
 
