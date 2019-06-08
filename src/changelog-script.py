@@ -10,15 +10,15 @@ logger = logging.getLogger("FCC")
 
 
 class WritableDirectoryAction(argparse.Action):
-  def __call__(self, parser, namespace, values, option_string=None):
-    prospective_dir = values
+    def __call__(self, parser, namespace, values, option_string=None):
+        prospective_dir = values
 
-    if not isdir(prospective_dir):
-      os.mkdir(prospective_dir)
+        if not isdir(prospective_dir):
+            os.mkdir(prospective_dir)
 
-    if os.access(prospective_dir, os.W_OK):
-      setattr(namespace, self.dest, realpath(prospective_dir))
-      return
+        if os.access(prospective_dir, os.W_OK):
+            setattr(namespace, self.dest, realpath(prospective_dir))
+            return
 
         raise argparse.ArgumentTypeError(
             "%s is not a writeable directory" % (prospective_dir,)
@@ -30,7 +30,8 @@ format_templates = {
         "message": "Generating Markdown Changelog",
         "separator": "\n---\n",
         "version": Template("\n## $version\n"),
-        "category": Template("\n### $category\n"),
+        "category": Template("\n### $category\n\n"),
+        "change": Template("- $change\n"),
     },
     "ingame": {
         "message": "Generating In-game Changelog",
@@ -38,17 +39,37 @@ format_templates = {
         "version": Template("Version: $version\n"),
         "date": Template("Date: $date\n"),
         "category": Template("\n  $category\n"),
+        "change": Template("    - $change\n"),
     },
     "forum": {
         "message": "Generating Factorio Forum Changelog",
         "version": Template("[size=150][b]$version[/b][/size]\n"),
         "category": Template("\n[b]$category[/b]\n"),
+        "list_start": "[list]\n",
+        "list_end": "[/list]\n",
+        "change": Template("[*] $change$more$by\n"),
     },
 }
 
+change_defaults = {"more": "", "by": ""}
+
+
+def change_formater(template, changes):
+    changes_output = template["list_start"] if "list_start" in template else ""
+    for change in changes:
+        if isinstance(change, dict):
+            print(change)
+            pass
+        else:
+            changes_output += template["change"].substitute(
+                change_defaults, change=change
+            )
+    changes_output += template["list_end"] if "list_end" in template else ""
+    return changes_output
+
 
 def version_formatter(template, version, data):
-  version_output = ""
+    version_output = ""
     if "separator" in template:
         version_output += template["separator"]
     version_output += template["version"].substitute(version=version)
@@ -57,48 +78,50 @@ def version_formatter(template, version, data):
     if "Categories" in data:
         for category, category_data in data["Categories"].items():
             version_output += template["category"].substitute(category=category)
+            version_output += change_formater(template, category_data)
     if "Changes" in data:
         version_output += template["category"].substitute(category="Other")
-  return version_output
+        version_output += change_formater(template, data["Changes"])
+    return version_output
 
 
 def create_changelog(args):
-  changelog = json.load(args.input_file)
+    changelog = json.load(args.input_file)
 
-  for output_format in args.formats:
-    format_template = format_templates[output_format]
-    logger.info(format_template["message"])
-    for version, data in changelog.items():
+    for output_format in args.formats:
+        format_template = format_templates[output_format]
+        logger.info(format_template["message"])
+        for version, data in changelog.items():
             print(version_formatter(format_template, version, data))
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
-  parser = argparse.ArgumentParser(description="Factorio changelog generator")
-  parser.add_argument(
-      "output_dir",
+    parser = argparse.ArgumentParser(description="Factorio changelog generator")
+    parser.add_argument(
+        "output_dir",
         nargs="?",
-      help="Directory where the files will be written",
-      default=".",
+        help="Directory where the files will be written",
+        default=".",
         action=WritableDirectoryAction,
-  )
-  parser.add_argument(
-      "input_file",
+    )
+    parser.add_argument(
+        "input_file",
         nargs="?",
-      help="JSON file to parse for changes",
-      default="changelog.json",
+        help="JSON file to parse for changes",
+        default="changelog.json",
         type=argparse.FileType("r"),
-  )
-  parser.add_argument(
-      "-f",
-      "--formats",
-      help="Which format[s] should be generated",
+    )
+    parser.add_argument(
+        "-f",
+        "--formats",
+        help="Which format[s] should be generated",
         default=["md", "ingame"],
         choices=["md", "ingame", "forum"],
         nargs="+",
-  )
+    )
     parser.add_argument("-v", "--verbose", help="Output verbosity", action="count")
-  args = parser.parse_args()
-  if args.verbose:
-    logger.setLevel(logging.DEBUG)
-  create_changelog(args)
+    args = parser.parse_args()
+    if args.verbose:
+        logger.setLevel(logging.DEBUG)
+    create_changelog(args)
