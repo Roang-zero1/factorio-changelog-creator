@@ -2,6 +2,7 @@ from os.path import isdir, realpath
 import argparse
 import os
 import json
+from string import Template
 
 import logging
 logger = logging.getLogger("FCC")
@@ -23,28 +24,44 @@ class WritableDirectoryAction(argparse.Action):
     ))
 
 
-def format_markdown(input):
-  logger.info("Generating Markdown Changelog")
+format_templates = {
+    'md': {
+        'message': "Generating Markdown Changelog",
+        'separator': "---",
+        "version": Template("## $version"),
+    },
+    'ingame': {
+        'message': "Generating In-game Changelog",
+        'separator': "---------------------------------------------------------------------------------------------------",
+        "version": Template('Version: $version'),
+        "date": Template("Date: $date")
+    },
+    'forum': {
+        'message': "Generating Factorio Forum Changelog",
+        "version": Template('[size=150][b]$version[/b][/size]'),
+    }
+}
 
 
-def format_ingame(input):
-  logger.info("Generating In-game Changelog")
+def format_version(template, version, data):
+  version_output = ""
+  if 'separator' in template:
+    version_output += template['separator'] + '\n'
+  version_output += template["version"].substitute(version=version) + "\n"
+  if 'date' in template and 'date' in data:
+    version_output += template["date"].substitute(date=data["date"]) + "\n"
 
-
-def format_forum(input):
-  logger.info("Generating Factorio Forum Changelog")
+  return version_output
 
 
 def create_changelog(args):
   changelog = json.load(args.input_file)
-  print(changelog)
-  formaters = {
-      'md': format_markdown,
-      'ingame': format_ingame,
-      'forum': format_forum
-  }
+
   for output_format in args.formats:
-    formaters[output_format](changelog)
+    format_template = format_templates[output_format]
+    logger.info(format_template["message"])
+    for version, data in changelog.items():
+      print(format_version(format_template, version, data))
 
 
 if __name__ == "__main__":
