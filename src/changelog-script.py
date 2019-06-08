@@ -5,6 +5,7 @@ import json
 from string import Template
 
 import logging
+
 logger = logging.getLogger("FCC")
 
 
@@ -19,36 +20,36 @@ class WritableDirectoryAction(argparse.Action):
       setattr(namespace, self.dest, realpath(prospective_dir))
       return
 
-    raise argparse.ArgumentTypeError('%s is not a writeable directory' % (
-        prospective_dir,
-    ))
+        raise argparse.ArgumentTypeError(
+            "%s is not a writeable directory" % (prospective_dir,)
+        )
 
 
 format_templates = {
-    'md': {
-        'message': "Generating Markdown Changelog",
-        'separator': "---",
+    "md": {
+        "message": "Generating Markdown Changelog",
+        "separator": "---",
         "version": Template("## $version"),
     },
-    'ingame': {
-        'message': "Generating In-game Changelog",
-        'separator': "---------------------------------------------------------------------------------------------------",
-        "version": Template('Version: $version'),
-        "date": Template("Date: $date")
+    "ingame": {
+        "message": "Generating In-game Changelog",
+        "separator": "---------------------------------------------------------------------------------------------------",
+        "version": Template("Version: $version"),
+        "date": Template("Date: $date"),
     },
-    'forum': {
-        'message': "Generating Factorio Forum Changelog",
-        "version": Template('[size=150][b]$version[/b][/size]'),
-    }
+    "forum": {
+        "message": "Generating Factorio Forum Changelog",
+        "version": Template("[size=150][b]$version[/b][/size]"),
+    },
 }
 
 
 def format_version(template, version, data):
   version_output = ""
-  if 'separator' in template:
-    version_output += template['separator'] + '\n'
+    if "separator" in template:
+        version_output += template["separator"] + "\n"
   version_output += template["version"].substitute(version=version) + "\n"
-  if 'date' in template and 'date' in data:
+    if "date" in template and "date" in data:
     version_output += template["date"].substitute(date=data["date"]) + "\n"
 
   return version_output
@@ -65,39 +66,31 @@ def create_changelog(args):
 
 
 if __name__ == "__main__":
-  logging.basicConfig(
-      level=logging.INFO,
-      format='%(levelname)s - %(message)s'
-  )
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
   parser = argparse.ArgumentParser(description="Factorio changelog generator")
   parser.add_argument(
       "output_dir",
-      nargs='?',
+        nargs="?",
       help="Directory where the files will be written",
       default=".",
-      action=WritableDirectoryAction
+        action=WritableDirectoryAction,
   )
   parser.add_argument(
       "input_file",
-      nargs='?',
+        nargs="?",
       help="JSON file to parse for changes",
       default="changelog.json",
-      type=argparse.FileType('r')
+        type=argparse.FileType("r"),
   )
   parser.add_argument(
       "-f",
       "--formats",
       help="Which format[s] should be generated",
-      default=['md', 'ingame'],
-      choices=['md', 'ingame', 'forum'],
-      nargs='+'
+        default=["md", "ingame"],
+        choices=["md", "ingame", "forum"],
+        nargs="+",
   )
-  parser.add_argument(
-      "-v",
-      "--verbose",
-      help="Output verbosity",
-      action='count'
-  )
+    parser.add_argument("-v", "--verbose", help="Output verbosity", action="count")
   args = parser.parse_args()
   if args.verbose:
     logger.setLevel(logging.DEBUG)
