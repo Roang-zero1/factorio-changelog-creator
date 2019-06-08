@@ -16,7 +16,7 @@ class WritableDirectoryAction(argparse.Action):
       setattr(namespace, self.dest, realpath(prospective_dir))
       return
 
-    raise argparse.ArgumentTypeError('%s is not a readable directory' % (
+    raise argparse.ArgumentTypeError('%s is not a writeable directory' % (
         prospective_dir,
     ))
 
