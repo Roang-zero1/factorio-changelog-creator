@@ -8,9 +8,7 @@ class WritableDirectoryAction(argparse.Action):
     prospective_dir = values
 
     if not isdir(prospective_dir):
-      raise argparse.ArgumentTypeError('%s is not a valid directory' % (
-          prospective_dir,
-      ))
+      os.mkdir(prospective_dir)
 
     if os.access(prospective_dir, os.W_OK):
       setattr(namespace, self.dest, realpath(prospective_dir))
