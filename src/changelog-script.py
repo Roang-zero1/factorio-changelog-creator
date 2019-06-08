@@ -118,7 +118,7 @@ def version_formatter(template, version, data, first):
         if first and "heading" in template:
             version_output += template["heading"]
         else:
-        version_output += template["separator"]
+            version_output += template["separator"]
     version_output += template["version"].substitute(version=version)
     if "date" in template and "date" in data:
         version_output += template["date"].substitute(date=data["date"])
@@ -127,8 +127,11 @@ def version_formatter(template, version, data, first):
             version_output += template["category"].substitute(category=category)
             version_output += change_formater(template, category_data)
     if "Changes" in data:
-        version_output += template["category"].substitute(category="Other")
-        version_output += change_formater(template, data["Changes"])
+        if "Categories" in data:
+            version_output += template["category"].substitute(category="Other")
+            version_output += change_formater(template, data["Changes"])
+        else:
+            version_output += change_formater(template, data["Changes"])
     return version_output
 
 
@@ -144,7 +147,7 @@ def create_changelog(args):
             encoding="utf-8",
         ) as output_file:
             first = True
-        for version, data in changelog.items():
+            for version, data in changelog.items():
                 output_file.write(
                     version_formatter(format_template, version, data, first)
                 )
