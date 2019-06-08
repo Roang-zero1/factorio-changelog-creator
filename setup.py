@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="factorio-changelog-creator",
-    version="1.0.1",
+    version="1.1.1",
     entry_points={
         "console_scripts": [
             "factorio-changelog-creator = factorio_changelog_creator.command_line:main"

@@ -2,18 +2,33 @@
 
 This is a quick and dirty python script for generating changelog for Factorio mods in various formats.
 
+## Quick install
+
+Install latest version from PYPI
+
+```code:: bash
+pip install factorio-changelog-creator
+```
+
+Install the current dev version from _GitHub_
+
+```code:: bash
+pip install git+https://github.com/Roang-zero1/factorio-changelog-creator.git
+```
+
 ## Usage
 
 Get the script file and put it somewhere on your computer.
 
-Run the script from the command line using python3 (e.g.`python3 changelog-script.py`). If no parameters are given, it will look for a file named `changelog.json` in the directory it was called from and it will output into the same directory.
+Run the script from the command line using `factorio-changelog-creator`. If no parameters are given, it will look for a file named `changelog.json` in the directory it was called from and it will output into the same directory.
 
-There is a command line help available, which can be opened with `python3 changelog-script.py -h`.
+There is a command line help available, which can be outputted with `factorio-changelog-creator -h`.
 
 ```text
-usage: changelog-script.py [-h] [-f {md,ingame,forum} [{md,ingame,forum} ...]]
-                           [-v]
-                           [output_dir] [input_file]
+usage: factorio-changelog-creator [-h]
+                                  [-f {md,ingame,forum} [{md,ingame,forum} ...]]
+                                  [-v]
+                                  [output_dir] [input_file]
 
 Factorio changelog generator
 
@@ -30,9 +45,9 @@ optional arguments:
 
 By default the markdown and in-game changelog will be generated. The forum changelog can be generated with `python3 changelog-script.py -f forum`.
 
-- `changelog_forum.txt`: The syntax forums.factorio.com uses
-- `CHANGELOG.md`: A markdown syntax that should work both on mods.factorio.com and GitHub
-- `changelog.txt`: The syntax the game uses - this is what should be left in the mod
+-   `changelog_forum.txt`: The syntax forums.factorio.com uses
+-   `CHANGELOG.md`: A markdown syntax that should work both on mods.factorio.com and GitHub
+-   `changelog.txt`: The syntax the game uses - this is what should be left in the mod
 
 ## Format
 
@@ -71,7 +86,7 @@ Each entry may either be a plain string that will be directly used or a dictiona
 
 ```json
 {
-  "url_text": "url_target"
+    "url_text": "url_target"
 }
 ```
 
