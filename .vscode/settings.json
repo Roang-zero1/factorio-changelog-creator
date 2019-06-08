@@ -1,0 +1,5 @@
+{
+  "python.pythonPath": ".env/bin/python",
+  "python.formatting.autopep8Args": ["--indent-size=2"],
+  "editor.formatOnSave": true
+}
