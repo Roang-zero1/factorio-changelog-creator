@@ -57,7 +57,7 @@ format_templates = {
 }
 
 format_filenames = {
-    "md": "Changelog.md",
+    "md": "CHANGELOG.md",
     "ingame": "changelog.txt",
     "forum": "changelog_forum.txt",
 }
