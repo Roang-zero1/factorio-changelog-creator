@@ -55,6 +55,12 @@ format_templates = {
     },
 }
 
+format_filenames = {
+    "md": "Changelog.md",
+    "ingame": "changelog.txt",
+    "forum": "changelog_forum.txt",
+}
+
 change_defaults = {"more": "", "by": ""}
 
 
@@ -128,8 +134,13 @@ def create_changelog(args):
     for output_format in args.formats:
         format_template = format_templates[output_format]
         logger.info(format_template["message"])
+        with open(
+            os.path.join(args.output_dir, format_filenames[output_format]),
+            "w",
+            encoding="utf-8",
+        ) as output_file:
         for version, data in changelog.items():
-            print(version_formatter(format_template, version, data))
+                output_file.write(version_formatter(format_template, version, data))
 
 
 if __name__ == "__main__":
