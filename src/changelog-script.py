@@ -29,7 +29,7 @@ format_templates = {
     "md": {
         "message": "Generating Markdown Changelog",
         "separator": "\n---\n",
-        "version": Template("\n## $version\n"),
+        "version": Template("\n## $version\n\n"),
         "category": Template("\n### $category\n\n"),
         "change": Template("- $change$more$by\n"),
         "url": Template("[$text]($target)"),
