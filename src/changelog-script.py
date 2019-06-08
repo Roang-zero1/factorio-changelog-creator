@@ -31,7 +31,8 @@ format_templates = {
         "separator": "\n---\n",
         "version": Template("\n## $version\n"),
         "category": Template("\n### $category\n\n"),
-        "change": Template("- $change\n"),
+        "change": Template("- $change$more$by\n"),
+        "url": Template("[$text]($target)"),
     },
     "ingame": {
         "message": "Generating In-game Changelog",
@@ -39,7 +40,9 @@ format_templates = {
         "version": Template("Version: $version\n"),
         "date": Template("Date: $date\n"),
         "category": Template("\n  $category\n"),
-        "change": Template("    - $change\n"),
+        "change": Template("    - $change$more$by\n"),
+        "more_url": Template("$target"),
+        "by_url": Template("$text"),
     },
     "forum": {
         "message": "Generating Factorio Forum Changelog",
@@ -48,18 +51,52 @@ format_templates = {
         "list_start": "[list]\n",
         "list_end": "[/list]\n",
         "change": Template("[*] $change$more$by\n"),
+        "url": Template("[url=$target]$text[/url]"),
     },
 }
 
 change_defaults = {"more": "", "by": ""}
 
 
+def entries_formatter(template, entries, entries_type):
+    entries_output = " more: " if entries_type == "more" else " by "
+    if not isinstance(entries, list):
+        entries = [entries]
+    for i, entry in enumerate(entries):
+        if i:
+            entries_output += ", "
+        if isinstance(entry, dict):
+            text = next(iter(entry))
+            if "url" in template:
+                entries_output += template["url"].substitute(
+                    text=text, target=entry[text]
+                )
+            else:
+                entries_output += template[f"{entries_type}_url"].substitute(
+                    text=text, target=entry[text]
+                )
+        else:
+            entries_output += entry
+    return entries_output
+
+
 def change_formater(template, changes):
     changes_output = template["list_start"] if "list_start" in template else ""
     for change in changes:
         if isinstance(change, dict):
-            print(change)
-            pass
+            more_text = (
+                entries_formatter(template, change["more"], "more")
+                if "more" in change
+                else ""
+            )
+            by_text = (
+                entries_formatter(template, change["by"], "by")
+                if "by" in change
+                else ""
+            )
+            changes_output += template["change"].substitute(
+                change=change["change"], more=more_text, by=by_text
+            )
         else:
             changes_output += template["change"].substitute(
                 change_defaults, change=change
