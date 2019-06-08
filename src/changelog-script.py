@@ -1,6 +1,7 @@
 from os.path import isdir, realpath
 import argparse
 import os
+import json
 
 
 class WritableDirectoryAction(argparse.Action):
@@ -19,9 +20,28 @@ class WritableDirectoryAction(argparse.Action):
     ))
 
 
+def format_markdown(input):
+  print("Markdown")
+
+
+def format_ingame(input):
+  print("ingame")
+
+
+def format_forum(input):
+  print("forum")
+
+
 def create_changelog(args):
-  print(args.output_dir)
-  print(args.input_file)
+  changelog = json.load(args.input_file)
+  print(changelog)
+  formaters = {
+      'md': format_markdown,
+      'ingame': format_ingame,
+      'forum': format_forum
+  }
+  for output_format in args.formats:
+    formaters[output_format](changelog)
 
 
 if __name__ == "__main__":
