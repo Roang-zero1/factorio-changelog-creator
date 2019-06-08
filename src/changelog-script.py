@@ -41,7 +41,7 @@ format_templates = {
     },
     "forum": {
         "message": "Generating Factorio Forum Changelog",
-        "version": Template("\n[size=150][b]$version[/b][/size]\n"),
+        "version": Template("[size=150][b]$version[/b][/size]\n"),
         "category": Template("\n[b]$category[/b]\n"),
     },
 }
