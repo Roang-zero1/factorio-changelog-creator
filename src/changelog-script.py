@@ -28,18 +28,18 @@ class WritableDirectoryAction(argparse.Action):
 format_templates = {
     "md": {
         "message": "Generating Markdown Changelog",
-        "separator": "---",
-        "version": Template("## $version"),
+        "separator": "\n---\n",
+        "version": Template("\n## $version\n"),
     },
     "ingame": {
         "message": "Generating In-game Changelog",
-        "separator": "---------------------------------------------------------------------------------------------------",
-        "version": Template("Version: $version"),
-        "date": Template("Date: $date"),
+        "separator": "---------------------------------------------------------------------------------------------------\n",
+        "version": Template("Version: $version\n"),
+        "date": Template("Date: $date\n"),
     },
     "forum": {
         "message": "Generating Factorio Forum Changelog",
-        "version": Template("[size=150][b]$version[/b][/size]"),
+        "version": Template("\n[size=150][b]$version[/b][/size]\n"),
     },
 }
 
@@ -47,11 +47,10 @@ format_templates = {
 def format_version(template, version, data):
   version_output = ""
     if "separator" in template:
-        version_output += template["separator"] + "\n"
-  version_output += template["version"].substitute(version=version) + "\n"
+        version_output += template["separator"]
+    version_output += template["version"].substitute(version=version)
     if "date" in template and "date" in data:
-    version_output += template["date"].substitute(date=data["date"]) + "\n"
-
+        version_output += template["date"].substitute(date=data["date"])
   return version_output
 
 
