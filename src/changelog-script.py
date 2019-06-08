@@ -28,6 +28,7 @@ class WritableDirectoryAction(argparse.Action):
 format_templates = {
     "md": {
         "message": "Generating Markdown Changelog",
+        "heading": "# Changelog\n",
         "separator": "\n---\n",
         "version": Template("\n## $version\n\n"),
         "category": Template("\n### $category\n\n"),
@@ -111,9 +112,12 @@ def change_formater(template, changes):
     return changes_output
 
 
-def version_formatter(template, version, data):
+def version_formatter(template, version, data, first):
     version_output = ""
     if "separator" in template:
+        if first and "heading" in template:
+            version_output += template["heading"]
+        else:
         version_output += template["separator"]
     version_output += template["version"].substitute(version=version)
     if "date" in template and "date" in data:
@@ -139,8 +143,12 @@ def create_changelog(args):
             "w",
             encoding="utf-8",
         ) as output_file:
+            first = True
         for version, data in changelog.items():
-                output_file.write(version_formatter(format_template, version, data))
+                output_file.write(
+                    version_formatter(format_template, version, data, first)
+                )
+                first = False
 
 
 if __name__ == "__main__":
