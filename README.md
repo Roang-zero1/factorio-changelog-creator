@@ -1,4 +1,4 @@
-# Changelog Script
+# Factorio Changelog Creator
 
 This is a quick and dirty python script for generating changelog for Factorio mods in various formats.
 

@@ -1,29 +1,8 @@
-from os.path import isdir, realpath
-import argparse
-import os
-import json
 from string import Template
 
 import logging
 
-logger = logging.getLogger("FCC")
-
-
-class WritableDirectoryAction(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        prospective_dir = values
-
-        if not isdir(prospective_dir):
-            os.mkdir(prospective_dir)
-
-        if os.access(prospective_dir, os.W_OK):
-            setattr(namespace, self.dest, realpath(prospective_dir))
-            return
-
-        raise argparse.ArgumentTypeError(
-            "%s is not a writeable directory" % (prospective_dir,)
-        )
-
+logger = logging.getLogger(__name__)
 
 format_templates = {
     "md": {
@@ -65,7 +44,7 @@ format_filenames = {
 change_defaults = {"more": "", "by": ""}
 
 
-def entries_formatter(template, entries, entries_type):
+def _entries_formatter(template, entries, entries_type):
     entries_output = " more: " if entries_type == "more" else " by "
     if not isinstance(entries, list):
         entries = [entries]
@@ -87,17 +66,17 @@ def entries_formatter(template, entries, entries_type):
     return entries_output
 
 
-def change_formater(template, changes):
+def _change_formater(template, changes):
     changes_output = template["list_start"] if "list_start" in template else "\n"
     for change in changes:
         if isinstance(change, dict):
             more_text = (
-                entries_formatter(template, change["more"], "more")
+                _entries_formatter(template, change["more"], "more")
                 if "more" in change
                 else ""
             )
             by_text = (
-                entries_formatter(template, change["by"], "by")
+                _entries_formatter(template, change["by"], "by")
                 if "by" in change
                 else ""
             )
@@ -112,7 +91,7 @@ def change_formater(template, changes):
     return changes_output
 
 
-def version_formatter(template, version, data, first):
+def _version_formatter(template, version, data, first):
     version_output = ""
     if "separator" in template:
         if first and "heading" in template:
@@ -125,62 +104,34 @@ def version_formatter(template, version, data, first):
     if "Categories" in data:
         for category, category_data in data["Categories"].items():
             version_output += template["category"].substitute(category=category)
-            version_output += change_formater(template, category_data)
+            version_output += _change_formater(template, category_data)
     if "Changes" in data:
         if "Categories" in data:
             version_output += template["category"].substitute(category="Other")
-            version_output += change_formater(template, data["Changes"])
+            version_output += _change_formater(template, data["Changes"])
         else:
-            version_output += change_formater(template, data["Changes"])
+            version_output += _change_formater(template, data["Changes"])
     return version_output
 
 
-def create_changelog(args):
-    changelog = json.load(args.input_file)
+def create_changelog(input_data, format_template):
+    output = ""
 
-    for output_format in args.formats:
-        format_template = format_templates[output_format]
-        logger.info(format_template["message"])
-        with open(
-            os.path.join(args.output_dir, format_filenames[output_format]),
-            "w",
-            encoding="utf-8",
-        ) as output_file:
-            first = True
-            for version, data in changelog.items():
-                output_file.write(
-                    version_formatter(format_template, version, data, first)
-                )
-                first = False
+    first = True
+    for version, data in input_data.items():
+        output += _version_formatter(format_template, version, data, first)
+        first = False
+
+    return output
+
+
+def get_format_template(format_name):
+    return format_templates[format_name]
+
+
+def get_format_filename(format_name):
+    return format_filenames[format_name]
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
-    parser = argparse.ArgumentParser(description="Factorio changelog generator")
-    parser.add_argument(
-        "output_dir",
-        nargs="?",
-        help="Directory where the files will be written",
-        default=".",
-        action=WritableDirectoryAction,
-    )
-    parser.add_argument(
-        "input_file",
-        nargs="?",
-        help="JSON file to parse for changes",
-        default="changelog.json",
-        type=argparse.FileType("r"),
-    )
-    parser.add_argument(
-        "-f",
-        "--formats",
-        help="Which format[s] should be generated",
-        default=["md", "ingame"],
-        choices=["md", "ingame", "forum"],
-        nargs="+",
-    )
-    parser.add_argument("-v", "--verbose", help="Output verbosity", action="count")
-    args = parser.parse_args()
-    if args.verbose:
-        logger.setLevel(logging.DEBUG)
-    create_changelog(args)
+    pass

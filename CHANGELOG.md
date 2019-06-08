@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.1.0
+
+### Features
+
+- Python Package for installation via pip
+
+### Changes
+
+- Modularized the package to make it accessible via import
+
+---
+
 ## 1.0.0
 
 ### Features

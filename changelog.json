@@ -1,28 +1,38 @@
 {
-  "1.0.0": {
-    "date": "2019-06-08",
+    "1.1.0": {
+        "date": "2019-06-08",
 
-    "Changes": [
-      {
-        "change": "Python port",
-        "by": { "Roang_zero1": "https://github.com/Roang-zero1/" }
-      }
-    ],
+        "Categories": {
+            "Features": ["Python Package for installation via pip"],
+            "Changes": [
+                "Modularized the package to make it accessible via import"
+            ]
+        }
+    },
+    "1.0.0": {
+        "date": "2019-06-08",
 
-    "Categories": {
-      "Features": ["Command Line Documentation"],
-      "Changes": ["Input is now taken from a JSON file"]
+        "Changes": [
+            {
+                "change": "Python port",
+                "by": { "Roang_zero1": "https://github.com/Roang-zero1/" }
+            }
+        ],
+
+        "Categories": {
+            "Features": ["Command Line Documentation"],
+            "Changes": ["Input is now taken from a JSON file"]
+        }
+    },
+    "0.1.0": {
+        "Changes": [
+            {
+                "change": "Initial version",
+                "more": {
+                    "theRustyKnife/factorio-changelog-script": "https://github.com/theRustyKnife/factorio-changelog-script"
+                },
+                "by": { "theRustyKnife": "https://github.com/theRustyKnife/" }
+            }
+        ]
     }
-  },
-  "0.1.0": {
-    "Changes": [
-      {
-        "change": "Initial version",
-        "more": {
-          "theRustyKnife/factorio-changelog-script": "https://github.com/theRustyKnife/factorio-changelog-script"
-        },
-        "by": { "theRustyKnife": "https://github.com/theRustyKnife/" }
-      }
-    ]
-  }
 }
