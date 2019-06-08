@@ -30,27 +30,35 @@ format_templates = {
         "message": "Generating Markdown Changelog",
         "separator": "\n---\n",
         "version": Template("\n## $version\n"),
+        "category": Template("\n### $category\n"),
     },
     "ingame": {
         "message": "Generating In-game Changelog",
         "separator": "---------------------------------------------------------------------------------------------------\n",
         "version": Template("Version: $version\n"),
         "date": Template("Date: $date\n"),
+        "category": Template("\n  $category\n"),
     },
     "forum": {
         "message": "Generating Factorio Forum Changelog",
         "version": Template("\n[size=150][b]$version[/b][/size]\n"),
+        "category": Template("\n[b]$category[/b]\n"),
     },
 }
 
 
-def format_version(template, version, data):
+def version_formatter(template, version, data):
   version_output = ""
     if "separator" in template:
         version_output += template["separator"]
     version_output += template["version"].substitute(version=version)
     if "date" in template and "date" in data:
         version_output += template["date"].substitute(date=data["date"])
+    if "Categories" in data:
+        for category, category_data in data["Categories"].items():
+            version_output += template["category"].substitute(category=category)
+    if "Changes" in data:
+        version_output += template["category"].substitute(category="Other")
   return version_output
 
 
@@ -61,7 +69,7 @@ def create_changelog(args):
     format_template = format_templates[output_format]
     logger.info(format_template["message"])
     for version, data in changelog.items():
-      print(format_version(format_template, version, data))
+            print(version_formatter(format_template, version, data))
 
 
 if __name__ == "__main__":
