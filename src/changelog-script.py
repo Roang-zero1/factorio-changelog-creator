@@ -30,8 +30,8 @@ format_templates = {
         "message": "Generating Markdown Changelog",
         "heading": "# Changelog\n",
         "separator": "\n---\n",
-        "version": Template("\n## $version\n\n"),
-        "category": Template("\n### $category\n\n"),
+        "version": Template("\n## $version\n"),
+        "category": Template("\n### $category\n"),
         "change": Template("- $change$more$by\n"),
         "url": Template("[$text]($target)"),
     },
@@ -40,7 +40,7 @@ format_templates = {
         "separator": "---------------------------------------------------------------------------------------------------\n",
         "version": Template("Version: $version\n"),
         "date": Template("Date: $date\n"),
-        "category": Template("\n  $category\n"),
+        "category": Template("\n  $category"),
         "change": Template("    - $change$more$by\n"),
         "more_url": Template("$target"),
         "by_url": Template("$text"),
@@ -88,7 +88,7 @@ def entries_formatter(template, entries, entries_type):
 
 
 def change_formater(template, changes):
-    changes_output = template["list_start"] if "list_start" in template else ""
+    changes_output = template["list_start"] if "list_start" in template else "\n"
     for change in changes:
         if isinstance(change, dict):
             more_text = (
