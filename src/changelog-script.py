@@ -3,6 +3,9 @@ import argparse
 import os
 import json
 
+import logging
+logger = logging.getLogger("FCC")
+
 
 class WritableDirectoryAction(argparse.Action):
   def __call__(self, parser, namespace, values, option_string=None):
@@ -21,15 +24,15 @@ class WritableDirectoryAction(argparse.Action):
 
 
 def format_markdown(input):
-  print("Markdown")
+  logger.info("Generating Markdown Changelog")
 
 
 def format_ingame(input):
-  print("ingame")
+  logger.info("Generating In-game Changelog")
 
 
 def format_forum(input):
-  print("forum")
+  logger.info("Generating Factorio Forum Changelog")
 
 
 def create_changelog(args):
@@ -45,6 +48,10 @@ def create_changelog(args):
 
 
 if __name__ == "__main__":
+  logging.basicConfig(
+      level=logging.INFO,
+      format='%(levelname)s - %(message)s'
+  )
   parser = argparse.ArgumentParser(description="Factorio changelog generator")
   parser.add_argument(
       "output_dir",
@@ -68,5 +75,13 @@ if __name__ == "__main__":
       choices=['md', 'ingame', 'forum'],
       nargs='+'
   )
+  parser.add_argument(
+      "-v",
+      "--verbose",
+      help="Output verbosity",
+      action='count'
+  )
   args = parser.parse_args()
+  if args.verbose:
+    logger.setLevel(logging.DEBUG)
   create_changelog(args)
