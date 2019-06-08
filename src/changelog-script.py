@@ -27,7 +27,7 @@ def create_changelog(args):
 
 
 if __name__ == "__main__":
-  parser = argparse.ArgumentParser()
+  parser = argparse.ArgumentParser(description="Factorio changelog generator")
   parser.add_argument(
       "output_dir",
       nargs='?',
@@ -41,6 +41,14 @@ if __name__ == "__main__":
       help="JSON file to parse for changes",
       default="changelog.json",
       type=argparse.FileType('r')
+  )
+  parser.add_argument(
+      "-f",
+      "--formats",
+      help="Which format[s] should be generated",
+      default=['md', 'ingame'],
+      choices=['md', 'ingame', 'forum'],
+      nargs='+'
   )
   args = parser.parse_args()
   create_changelog(args)
