@@ -1,5 +1,5 @@
 {
-  "python.pythonPath": ".env/bin/python",
+  "python.pythonPath": ".venv/bin/python",
   "editor.formatOnSave": true,
   "spellright.language": ["en_GB"],
   "spellright.documentTypes": [

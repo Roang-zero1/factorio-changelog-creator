@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 
 import argparse
-import os
 import json
-from os.path import isdir, realpath
 import logging
+import os
+from os.path import isdir, realpath
 
+from . import __version__
 from .creator import create_changelog, get_format_filename, get_format_template
 
 logger = logging.getLogger(__name__)
@@ -53,6 +54,9 @@ def main():
         nargs="+",
     )
     parser.add_argument("-v", "--verbose", help="Output verbosity", action="count")
+    parser.add_argument(
+        "--version", action="version", version="%(prog)s " + __version__,
+    )
     args = parser.parse_args()
     if args.verbose:
         logger.setLevel(logging.DEBUG)

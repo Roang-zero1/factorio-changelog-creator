@@ -1,6 +1,5 @@
-from string import Template
-
 import logging
+from string import Template
 
 logger = logging.getLogger(__name__)
 
