@@ -45,9 +45,9 @@ optional arguments:
 
 By default the markdown and in-game changelog will be generated. The forum changelog can be generated with `python3 changelog-script.py -f forum`.
 
--   `changelog_forum.txt`: The syntax forums.factorio.com uses
--   `CHANGELOG.md`: A markdown syntax that should work both on mods.factorio.com and GitHub
--   `changelog.txt`: The syntax the game uses - this is what should be left in the mod
+- `changelog_forum.txt`: The syntax forums.factorio.com uses
+- `CHANGELOG.md`: A markdown syntax that should work both on mods.factorio.com and GitHub
+- `changelog.txt`: The syntax the game uses - this is what should be left in the mod
 
 ## Format
 
@@ -60,7 +60,7 @@ The format of the dictionary is this:
   "0.1.0": {
     "date": "2019-06-08", -- Optional, can be anything
 
-    "Changes": ["Change without category"], --Changes will be put in the Oterh Category
+    "Changes": ["Change without category"], --Changes will be put in the Other Category
 
     "Categories": { -- Categories may be any string
       "Features": ["Change in category"]
@@ -86,7 +86,7 @@ Each entry may either be a plain string that will be directly used or a dictiona
 
 ```json
 {
-    "url_text": "url_target"
+  "url_text": "url_target"
 }
 ```
 
