@@ -9,6 +9,7 @@ format_templates = {
         "heading": "# Changelog\n",
         "separator": "\n---\n",
         "version": Template("\n## $version\n"),
+        "version_date": Template("\n## $version ($date)\n"),
         "category": Template("\n### $category\n"),
         "change": Template("- $change$more$by\n"),
         "url": Template("[$text]($target)"),
@@ -98,7 +99,13 @@ def _version_formatter(template, version, data, first):
             version_output += template["heading"]
         else:
             version_output += template["separator"]
-    version_output += template["version"].substitute(version=version)
+    if "date" in data and "version_date" in template:
+        version_output += template["version_date"].substitute(
+            version=version, date=data["date"]
+        )
+    else:
+        version_output += template["version"].substitute(version=version)
+
     if "date" in template and "date" in data:
         version_output += template["date"].substitute(date=data["date"])
     if "Categories" in data:
