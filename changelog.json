@@ -1,4 +1,13 @@
 {
+    "1.1.2": {
+        "date": "2019-12-25",
+
+        "Changes": [
+            "Fix in-game changelog",
+            "Add date to Markdown changelog",
+            "Update README"
+        ]
+    },
     "1.1.1": {
         "date": "2019-06-08",
 
