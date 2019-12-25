@@ -16,9 +16,10 @@ format_templates = {
     "ingame": {
         "message": "Generating In-game Changelog",
         "separator": "---------------------------------------------------------------------------------------------------\n",
+        "heading_changes": "\n  Changes:",
         "version": Template("Version: $version\n"),
         "date": Template("Date: $date\n"),
-        "category": Template("\n  $category"),
+        "category": Template("\n  $category:"),
         "change": Template("    - $change$more$by\n"),
         "more_url": Template("$target"),
         "by_url": Template("$text"),
@@ -107,9 +108,11 @@ def _version_formatter(template, version, data, first):
     if "Changes" in data:
         if "Categories" in data:
             version_output += template["category"].substitute(category="Other")
-            version_output += _change_formater(template, data["Changes"])
         else:
-            version_output += _change_formater(template, data["Changes"])
+            if "heading_changes" in template:
+                version_output += template["heading_changes"]
+
+        version_output += _change_formater(template, data["Changes"])
     return version_output
 
 
